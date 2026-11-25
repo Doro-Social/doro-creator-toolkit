@@ -1,0 +1,6 @@
+import fs from 'node:fs/promises';import path from 'node:path';import {randomUUID} from 'node:crypto';
+export async function lockWorkspace(root:string){await fs.mkdir(root,{recursive:true});const file=path.join(root,'.server-lock.json'),token=randomUUID();
+ for(let attempt=0;attempt<2;attempt++){try{const handle=await fs.open(file,'wx');try{await handle.writeFile(JSON.stringify({pid:process.pid,token}));}finally{await handle.close();}return async()=>{try{const saved=JSON.parse(await fs.readFile(file,'utf8'));if(saved.token===token)await fs.rm(file,{force:true});}catch{}};}catch(e){if((e as NodeJS.ErrnoException).code!=='EEXIST')throw e;let pid:number;try{pid=JSON.parse(await fs.readFile(file,'utf8')).pid;if(!Number.isInteger(pid)||pid<1)throw new Error();}catch{throw new Error('Workspace lock is unreadable. Check for a running app before removing '+file);}
+ try{process.kill(pid,0);throw new Error('This workspace is already open in process '+pid+'. Use its existing URL or choose a different ACC_WORKSPACE.');}catch(e){if((e as NodeJS.ErrnoException).code!=='ESRCH')throw e;}await fs.rm(file,{force:true});}}
+ throw new Error('Could not acquire the workspace lock. Retry after closing the other app.');
+}

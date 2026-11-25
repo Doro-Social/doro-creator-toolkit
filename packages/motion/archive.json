@@ -1,0 +1,57 @@
+{
+  "orbit": {
+    "src": "/motion-studies/archive/orbit-v1.mp4",
+    "poster": "/motion-studies/archive/orbit-v1.jpg",
+    "note": "Platform tiles orbit a fixed central idea, then settle into a readable arrangement."
+  },
+  "chat-takeover": {
+    "src": "/motion-studies/archive/chat-takeover-v1.mp4",
+    "poster": "/motion-studies/archive/chat-takeover-v1.jpg",
+    "note": "Short messages build a conversation, then hold the final reply."
+  },
+  "frame-escape": {
+    "src": "/motion-studies/archive/frame-escape-v1.mp4",
+    "poster": "/motion-studies/archive/frame-escape-v1.jpg",
+    "note": "The real Doro mark moves beyond an intact frame while main-app dashboard platform assets enter below."
+  },
+  "snap-zoom": {
+    "src": "/motion-studies/archive/snap-zoom-v1.mp4",
+    "poster": "/motion-studies/archive/snap-zoom-v1.jpg",
+    "note": "A fast punch-in isolates the Draft status on an actual Doro demo screen, holds, then returns to context."
+  },
+  "checklist-pop": {
+    "src": "/motion-studies/archive/checklist-pop-v1.mp4",
+    "poster": "/motion-studies/archive/checklist-pop-v1.jpg",
+    "note": "Three review items pop into place, followed by clear completion marks and a readable final hold."
+  },
+  "headline-storm": {
+    "src": "/motion-studies/archive/headline-storm-v1.mp4",
+    "poster": "/motion-studies/archive/headline-storm-v1.jpg",
+    "note": "Workflow words arrive from different directions, then resolve into one bold, stable headline."
+  },
+  "zoom-portal": {
+    "src": "/motion-studies/archive/zoom-portal-v1.mp4",
+    "poster": "/motion-studies/archive/zoom-portal-v1.jpg",
+    "note": "A circular opening expands into a real Doro draft workspace and holds the destination."
+  },
+  "growth-curve": {
+    "src": "/motion-studies/archive/growth-curve-v1.mp4",
+    "poster": "/motion-studies/archive/growth-curve-v1.jpg",
+    "note": "A labeled illustrative weekly-post curve draws on with values and a readable final hold."
+  },
+  "magazine-cover": {
+    "src": "/motion-studies/archive/magazine-cover-v1.mp4",
+    "poster": "/motion-studies/archive/magazine-cover-v1.jpg",
+    "note": "A bold Doro editorial cover assembles its masthead, hero subject and masked cover lines."
+  },
+  "zoom-through-cut": {
+    "src": "/motion-studies/archive/zoom-through-cut-v1.mp4",
+    "poster": "/motion-studies/archive/zoom-through-cut-v1.jpg",
+    "note": "A cyan card fills the frame, concealing a cut into a bold many-voices destination."
+  },
+  "phone-mockup": {
+    "src": "/motion-studies/archive/phone-mockup-v1.mp4",
+    "poster": "/motion-studies/archive/phone-mockup-v1.jpg",
+    "note": "A dimensional phone rises into a front-facing view of an actual rendered Doro cover."
+  }
+}

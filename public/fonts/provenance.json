@@ -1,0 +1,9 @@
+{
+  "family": "Fraunces",
+  "usage": "Creative coffee sample font, not Doro UI brand font",
+  "package": "@fontsource/fraunces@5.3.0",
+  "source": "https://www.npmjs.com/package/@fontsource/fraunces",
+  "license": "OFL-1.1",
+  "licenseFile": "Fraunces-LICENSE.txt",
+  "sha256": "475b154af19c6b4ef371db22078b5044a078ce2467e11ef22a7b87f77837caf3"
+}

@@ -1,0 +1,8 @@
+import {spawn} from 'node:child_process';
+export function runRenderer(executable:string,args:string[],signal?:AbortSignal){return new Promise<{stdout:string;stderr:string}>((resolve,reject)=>{if(signal?.aborted){reject(new Error('Export cancelled.'));return;}
+ const child=spawn(executable,args,{detached:process.platform!=='win32',stdio:['ignore','pipe','pipe']});let stdout='',stderr='',reason:Error|undefined,killTimer:ReturnType<typeof setTimeout>|undefined;
+ const kill=(force=false)=>{if(!child.pid)return;try{if(process.platform==='win32')child.kill(force?'SIGKILL':'SIGTERM');else process.kill(-child.pid,force?'SIGKILL':'SIGTERM');}catch{}};
+ const stop=(message:string)=>{if(reason)return;reason=new Error(message);kill();killTimer=setTimeout(()=>kill(true),3000);};const abort=()=>stop('Export cancelled.');signal?.addEventListener('abort',abort);const timer=setTimeout(()=>stop('Video rendering exceeded ten minutes. Retry with fewer slides.'),600000);
+ const collect=(kind:'stdout'|'stderr',chunk:Buffer)=>{if(kind==='stdout')stdout+=chunk.toString();else stderr+=chunk.toString();if(stdout.length+stderr.length>12*1024*1024)stop('Renderer output exceeded the safety limit.');};child.stdout.on('data',c=>collect('stdout',c));child.stderr.on('data',c=>collect('stderr',c));
+ const cleanup=()=>{clearTimeout(timer);if(killTimer)clearTimeout(killTimer);signal?.removeEventListener('abort',abort);if(reason)kill(true);};child.on('error',e=>{cleanup();reject(e);});child.on('close',code=>{cleanup();if(reason)reject(reason);else if(code!==0)reject(new Error('Renderer failed: '+stderr.slice(-1500)));else resolve({stdout,stderr});});
+ });}

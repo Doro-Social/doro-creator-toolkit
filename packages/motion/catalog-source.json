@@ -1,0 +1,132 @@
+{
+  "version": 8,
+  "definitionPolicy": "Names supplied by Admas on 2026-10-27. Descriptions are working creative interpretations, not verified reproductions of the social examples. All entries are documented concepts, not installed render presets. Reference clips can refine these definitions without changing stable IDs.",
+  "styles": [
+    {
+      "id": "orbit",
+      "name": "Orbit",
+      "category": "Spatial",
+      "summary": "A central subject stays readable while supporting objects travel around it.",
+      "cautions": "Keep the headline stationary. Orbit supporting objects, not paragraphs."
+    },
+    {
+      "id": "chat-takeover",
+      "name": "Chat Takeover",
+      "category": "Narrative",
+      "summary": "A conversation progressively occupies the composition to explain a question, objection or workflow.",
+      "cautions": "Never present invented messages as real testimonials. Keep a readable conversation, not a flood of notifications."
+    },
+    {
+      "id": "frame-escape",
+      "name": "Frame Escape",
+      "category": "Spatial",
+      "summary": "A subject crosses beyond its enclosing card or screen using layered foreground and background elements.",
+      "cautions": "This is a smooth escape with the frame intact. Frame Break uses an impact or rupture. Essential text stays inside the slide safe zone."
+    },
+    {
+      "id": "snap-zoom",
+      "name": "Snap Zoom",
+      "category": "Camera",
+      "summary": "A fast punch-in redirects attention to one detail within the same shot or layout.",
+      "cautions": "Use a deliberate reframe, not repeated camera shaking. This stays in one shot; it does not open a new scene."
+    },
+    {
+      "id": "checklist-pop",
+      "name": "Checklist Pop",
+      "category": "Sequence",
+      "summary": "Checklist items arrive individually with a short positional overshoot and a clear completed state.",
+      "cautions": "The item arrival is the emphasis. Use Checklist Tally when the count or completion total carries the message."
+    },
+    {
+      "id": "headline-storm",
+      "name": "Headline Storm",
+      "category": "Typography",
+      "summary": "Several short typographic fragments converge into one dominant, readable headline.",
+      "cautions": "Do not scatter the only useful information. The landing must be readable without following every incoming word."
+    },
+    {
+      "id": "zoom-portal",
+      "name": "Zoom Portal",
+      "category": "Transition",
+      "summary": "A bounded object becomes a visual portal into a new scene through an expanding mask.",
+      "cautions": "The expanding opening is visible. Keep the whole transition within a video slide; swipe timing cannot be assumed."
+    },
+    {
+      "id": "growth-curve",
+      "name": "Growth Curve",
+      "category": "Data",
+      "summary": "A plotted curve draws over time while labels explain the progression or change.",
+      "cautions": "Never invent performance results or imply a conceptual line is measured data. Use a non-linear path only when justified."
+    },
+    {
+      "id": "b-roll-overlay",
+      "name": "B-roll Overlay",
+      "category": "Footage",
+      "summary": "Relevant moving footage supports a stable foreground headline, annotation or product card.",
+      "cautions": "Footage should explain the point. Protect contrast and avoid placing text over the main action."
+    },
+    {
+      "id": "paper-cutout",
+      "name": "Paper Cutout",
+      "category": "Material",
+      "summary": "Layered cutout shapes and tactile paper elements move as an editorial collage.",
+      "cautions": "Avoid fake ransom-note clutter. Decorative texture must not reduce text contrast."
+    },
+    {
+      "id": "magazine-cover",
+      "name": "Magazine Cover",
+      "category": "Typography",
+      "summary": "An editorial cover composition animates a hero subject, masthead and a small number of cover lines.",
+      "cautions": "This is a layout treatment, not a motion preset. Do not invent publication endorsements or turn every slide into a cover."
+    },
+    {
+      "id": "liquid-glass",
+      "name": "Liquid Glass",
+      "category": "Material",
+      "summary": "Translucent surfaces, refraction and moving highlights reveal content through a glass-like composition.",
+      "cautions": "This names a material direction, not a guaranteed native effect. Prototype refraction and render cost; keep blur behind the reading layer."
+    },
+    {
+      "id": "zoom-through-cut",
+      "name": "Zoom Through Cut\u2026",
+      "category": "Transition",
+      "summary": "Provisional interpretation: accelerate through an object or occlusion, cutting to a matching destination shot.",
+      "cautions": "The source name was cropped. Confirm against a reference before claiming an exact match. Distinct from Zoom Portal: a concealed cut rather than a visible expanding mask."
+    },
+    {
+      "id": "green-screen",
+      "name": "Green Screen",
+      "category": "Footage",
+      "summary": "A keyed presenter or isolated subject appears over a relevant screen, image or video.",
+      "cautions": "Green Screen describes compositing, not a required visible green background. Avoid covering the UI or creating an unapproved synthetic presenter."
+    },
+    {
+      "id": "frame-break",
+      "name": "Frame Break",
+      "category": "Spatial",
+      "summary": "An impact, deformation or rupture of a graphic boundary reveals the subject or the next state.",
+      "cautions": "Frame Escape crosses an intact boundary; Frame Break changes the boundary itself. Avoid unrelated shatter effects and keep debris away from text."
+    },
+    {
+      "id": "digital-zoom",
+      "name": "Digital Zoom",
+      "category": "Camera",
+      "summary": "A controlled crop and scale move gradually reframes a screen, image or video to make a detail readable.",
+      "cautions": "Compared with Snap Zoom, this move gives the viewer time to follow the path. Avoid zooming past usable source resolution."
+    },
+    {
+      "id": "phone-mockup",
+      "name": "Phone Mockup",
+      "category": "Product",
+      "summary": "Actual content or product screens are presented inside a device frame with a purposeful device or camera move.",
+      "cautions": "This is a presentation treatment. Use actual UI; dramatic device angles cannot substitute for readable screen content."
+    },
+    {
+      "id": "checklist-tally",
+      "name": "Checklist Tally",
+      "category": "Sequence",
+      "summary": "Checks accumulate into a visible completion count, connecting individual criteria to a total.",
+      "cautions": "Unlike Checklist Pop, the changing total is central. Do not imply criteria are satisfied without evidence, or use the counter as a page number."
+    }
+  ]
+}

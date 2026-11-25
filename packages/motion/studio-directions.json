@@ -1,0 +1,23 @@
+[
+  {
+    "id": "exploded-view",
+    "name": "Exploded View",
+    "category": "Spatial",
+    "summary": "An assembled object separates along a shared axis to reveal the relationship between its parts.",
+    "cautions": "Use consistent orientation and leave room for the labels."
+  },
+  {
+    "id": "comparison-wipe",
+    "name": "Comparison Wipe",
+    "category": "Comparison",
+    "summary": "A moving divider reveals a second sample at the same scale, then holds both in view.",
+    "cautions": "Keep scale and framing fixed; identify both sides in the settled frame."
+  },
+  {
+    "id": "route-trace",
+    "name": "Route Trace",
+    "category": "Navigation",
+    "summary": "A line draws a route across a fixed plan and resolves at a marked destination.",
+    "cautions": "Keep the start, endpoint and landmarks legible after the line settles."
+  }
+]

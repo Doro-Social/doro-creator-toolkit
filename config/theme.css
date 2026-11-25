@@ -1,0 +1,9 @@
+/* Approved Calm Creator Studio UI. Carousel artwork has independent brand colors. */
+:root {
+ --background:#080a0d; --surface:#101319; --text:#f1f5f9; --muted:#94a3b8;
+ --primary:#00e599; --primary-hover:#00c985; --on-primary:#05281d;
+ --border:#282e3c; --focus:#00e599; --success:#72e5b7; --warning:#ffb59e; --error:#ffb4ab;
+ --selected:#00e5991a; --accent:#00e599; --canvas:#080a0d;
+ --panel-raised:#191d26; --panel-elevated:#212631; --action:#ff5717;
+ --font-body:'Plus Jakarta Sans',sans-serif; --font-display:'Space Grotesk',sans-serif;
+}

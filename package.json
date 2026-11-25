@@ -14,9 +14,9 @@
     "agent": "tsx packages/agent-tools/src/index.ts",
     "cli": "tsx packages/cli/src/index.ts",
     "doctor": "tsx packages/cli/src/index.ts doctor",
-    "test:browser": "tsx tests/browser-smoke.ts",
-    "test:mcp": "tsx tests/mcp-smoke.ts",
-    "test:render": "tsx tests/render-smoke.ts",
+    "test:browser": "tsx tools/carousel/tests/browser-smoke.ts",
+    "test:mcp": "tsx tools/carousel/tests/mcp-smoke.ts",
+    "test:render": "tsx tools/carousel/tests/render-smoke.ts",
     "start": "tsx packages/local-server/src/index.ts --production"
   },
   "dependencies": {

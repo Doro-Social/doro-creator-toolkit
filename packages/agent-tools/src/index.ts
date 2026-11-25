@@ -1,14 +1,14 @@
-import {handoffSchema} from '../../exports/src/handoff.ts';
-import {kitInput} from '../../core/src/brands.ts';
+import {handoffSchema} from '../../../tools/carousel/exports/src/handoff.ts';
+import {kitInput} from '../../../tools/carousel/core/src/brands.ts';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import {StdioServerTransport} from '@modelcontextprotocol/sdk/server/stdio.js';
 import {z} from 'zod';
-import {createProjectSchema} from '../../templates/src/coffee.ts';
-import {exportSchema} from '../../exports/src/index.ts';
-import {projectSchema} from '../../core/src/schema.ts';
-import {commandSchema} from '../../core/src/schema.ts';
+import {createProjectSchema} from '../../../tools/carousel/templates/src/coffee.ts';
+import {exportSchema} from '../../../tools/carousel/exports/src/index.ts';
+import {projectSchema} from '../../../tools/carousel/core/src/schema.ts';
+import {commandSchema} from '../../../tools/carousel/core/src/schema.ts';
 const base=process.env.ACC_URL||'http://127.0.0.1:4310';
 const server=new McpServer({name:'doro-creator-toolkit',version:'0.1.0'});
 async function call(url:string,method='GET',body?:unknown){const r=await fetch(base+url,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const data=await r.json();return {content:[{type:'text' as const,text:JSON.stringify(r.ok&&data.schemaVersion===1?compactProject(data):data)}],isError:!r.ok};}

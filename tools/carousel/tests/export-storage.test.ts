@@ -1,0 +1,4 @@
+import {it,expect} from 'vitest';
+import {mkdtemp,writeFile,rm} from 'node:fs/promises';import path from 'node:path';import {tmpdir} from 'node:os';
+import {Exports} from '../exports/src/index.ts';import {newProject} from '../templates/src/index.ts';
+it('does not leave a phantom active job when snapshot storage fails',async()=>{const root=await mkdtemp(path.join(tmpdir(),'export-storage-'));try{const blocked=path.join(root,'blocked');await writeFile(blocked,'not a directory');const service=new Exports(blocked),p=newProject();await expect(service.start(p,{expectedRevision:0,format:'jpg',quality:'standard'})).rejects.toMatchObject({code:'EXPORT_STORAGE_ERROR'});expect(service.list(p.id).map(j=>j.status)).toEqual(['failed']);await expect(service.start(p,{expectedRevision:0,format:'jpg',quality:'standard'})).rejects.toMatchObject({code:'EXPORT_STORAGE_ERROR'});expect(service.list(p.id)).toHaveLength(2);}finally{await rm(root,{recursive:true,force:true});}});

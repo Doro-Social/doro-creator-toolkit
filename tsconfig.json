@@ -17,6 +17,7 @@
     "apps",
     "packages",
     "tests",
-    "vite.config.ts"
+    "vite.config.ts",
+    "tools"
   ]
 }

@@ -31,7 +31,7 @@ The CLI handles JSON requests. Paths omit `/api`; the current CLI supports GET/P
 | Poll | `request GET /exports/JOB_ID` |
 | Export history | `request GET /projects/PROJECT_ID/exports` |
 
-For exact schemas read `packages/templates/src/coffee.ts` (create), `packages/core/src/schema.ts` (edits), `packages/core/src/publishing.ts` (post details), and `packages/exports/src/index.ts` (exports). These paths are relative to the app root. With MCP, discover tool schemas instead. Capability metadata does not include the full edit schema.
+For exact schemas read `tools/carousel/templates/src/coffee.ts` (create), `tools/carousel/core/src/schema.ts` (edits), `tools/carousel/core/src/publishing.ts` (post details), and `tools/carousel/exports/src/index.ts` (exports). These paths are relative to the app root. With MCP, discover tool schemas instead. Capability metadata does not include the full edit schema.
 
 Creation body: title plus optional outline entries `{headline, body}`, brand, canvas and requestId. Do not combine outline with templateId. Editing body: expectedRevision, requestId and commands. Project ID is in the CLI path, not the JSON edit body. Export body: expectedRevision, format, quality and requestId. Use actual returned IDs/revisions, never placeholders. Save request JSON and UUIDs outside the live project store so retries can reuse them.
 

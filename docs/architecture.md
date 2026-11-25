@@ -2,15 +2,36 @@
 
 Doro Creator Toolkit is a local, agent-first content workspace. React/Vite supplies the review and editing UI. The Express server owns validated project mutations, revisions, history, local storage and export jobs. CLI and stdio MCP tools use that same server; no embedded model service or model API key is needed.
 
-## Code map
+## Repository map
 
-- `apps/studio`: editor, project library, templates, motion library, branding, review and exports.
-- `packages/core`: strict schemas, revision-checked commands, recovery journals, portable bundles and review rules.
-- `packages/agent-tools` and `packages/cli`: local agent entry points.
-- `packages/templates` and `packages/motion`: editable starting points, treatments and gallery reference metadata.
-- `packages/rendering` and `packages/exports`: shared slide rendering, pinned HyperFrames adapter, asynchronous exports and local handoff packets.
-- `packages/media`: normalized artwork and restricted SVG logo ingestion.
-- `skills/carousel-creator`: operating guidance for installation, authoring, review and export.
+```text
+apps/studio/             Browser entry point and Vite app types
+tools/carousel/         Existing carousel capability (details below)
+packages/agent-tools/    Shared stdio MCP entry point
+packages/cli/            Shared terminal entry point and doctor
+packages/local-server/   Local HTTP service and process lifecycle
+packages/media/          Image normalization and restricted SVG ingestion
+packages/common/         Error type shared by media and carousel operations
+packages/studio-ui/      Existing studio shell, icons and global styles
+skills/carousel-creator/ Agent instructions for the carousel workflow
+public/                 Served static fonts, brand assets and gallery media
+config/                 Shared theme tokens
+tests/                  Toolkit startup checks and shared test-server helper
+```
+
+### Carousel ownership
+
+`tools/carousel/` owns its domain schemas and persistence (`core`), templates, motion catalog/treatments, rendering, exports, React workflow/editor (`ui`), tests and authored examples. Its browser workspace is mounted by `apps/studio/src/main.tsx`. The renderer consumes the same tool-owned SlideCanvas component and stylesheet as the preview.
+
+The local server and MCP entry point currently register carousel operations directly. They remain shared entry points; this refactor does not introduce a plugin loader or pretend another tool exists. Routes, MCP tool names, CLI commands, environment variables, saved project schemas and workspace locations remain unchanged.
+
+Static assets remain in `public` to preserve existing URLs and portable export font paths. Their source examples are under `tools/carousel/examples`; brand/font notices are retained. Runtime caches and rendered test output stay outside source control.
+
+### Adding capabilities later
+
+Add an actual capability under `tools/<name>` when it exists, with its domain code and tests together. Add a skill under `skills/<name>` when an agent workflow needs one; a skill need not have a UI or backend. Keep reusable infrastructure in `packages`, and extract shared behavior when there is a concrete consumer. Do not add empty future-tool folders, speculative interfaces or platform-wide hierarchies.
+
+Tool code may depend on shared packages, but shared media/common/UI utilities must not import carousel domain code. The server and agent registration layers are composition points and may import the tools they expose. Shared UI currently presents the existing carousel navigation; extend it when another real capability is added.
 
 ## Data and external actions
 

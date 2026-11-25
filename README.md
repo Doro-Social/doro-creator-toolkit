@@ -26,6 +26,10 @@ If doctor reports a missing export browser, run `npx playwright install chromium
 
 The first install requires internet. HyperFrames 0.8.224 and Bun 1.4.4 are project-local dependencies; no global installation is required. Doctor checks runtime, FFmpeg/ffprobe, writable storage, free disk space and browser launch. Run npm run test:render for an actual renderer test. macOS is the verified environment; clean-machine and other OS validation remain open.
 
+## Repository organization
+
+Carousel implementation, UI, templates, motion, rendering, exports, tests and source examples live in [`tools/carousel`](tools/carousel/README.md). The browser entry point stays in `apps/studio`; common infrastructure stays in `packages`; agent skills stay in `skills`. Only existing capabilities have folders. See [architecture and boundaries](docs/architecture.md) for ownership and extension guidance.
+
 ## Working features
 
 - Custom slide photos and business logos: JPEG/PNG/WebP up to 10 MB, plus simple SVG business logos up to 1 MB, fit/fill framing and focal-point controls. Images are normalized to at most 2000 px and embedded locally.
@@ -69,10 +73,10 @@ npm test
 npm run build
 npm run test:browser
 npm run test:mcp
-npx tsx tests/template-agent.ts
-npx tsx tests/export-http.ts
-npx tsx tests/export-agent.ts
-npx tsx tests/export-workflow.ts
+npx tsx tools/carousel/tests/template-agent.ts
+npx tsx tools/carousel/tests/export-http.ts
+npx tsx tools/carousel/tests/export-agent.ts
+npx tsx tools/carousel/tests/export-workflow.ts
 ```
 
 Browser/MCP/HTTP tests need the running app and create verification projects. Export-workflow uses isolated `.artifacts` storage and runs a real video render. See [architecture and boundaries](docs/architecture.md).
@@ -89,9 +93,9 @@ Agents can call `import_image` with an absolute local `filePath`, `alt`, `projec
 
 Slide photos accept still JPEG/PNG/WebP under 40 megapixels. Business logos also accept simple SVG up to 1 MB: outlined shapes and local gradients, without scripts, external references, CSS styles, embedded images, filters or live text. Convert text to outlines or export a transparent PNG for unsupported artwork. SVG logos are rasterized locally up to 2000 px for sharp reuse; original SVG source is not embedded. Files are re-encoded to WebP with orientation applied and metadata stripped. Transparency is preserved. Highly detailed images whose normalized size exceeds 1 MB must be resized. Embedded artwork makes project files/history larger; browser draft recovery can hit browser storage limits, so save to disk regularly.
 
-Verification: `npx tsx tests/media-workflow.ts` covers UI uploads, direct MCP attachment, framing, portable reimport, PDF and video export.
+Verification: `npx tsx tools/carousel/tests/media-workflow.ts` covers UI uploads, direct MCP attachment, framing, portable reimport, PDF and video export.
 
-Template verification: `npx tsx tests/collection-browser.ts` exercises all four gallery-to-editor flows. `npx tsx tests/collection-workflow.ts` exports every example in portrait, square and widescreen and renders a font-comparison video. Sample display type is bundled Fraunces under OFL-1.1; app UI typography is unchanged.
+Template verification: `npx tsx tools/carousel/tests/collection-browser.ts` exercises all four gallery-to-editor flows. `npx tsx tools/carousel/tests/collection-workflow.ts` exports every example in portrait, square and widescreen and renders a font-comparison video. Sample display type is bundled Fraunces under OFL-1.1; app UI typography is unchanged.
 
 ## Reuse a brand
 
@@ -135,7 +139,7 @@ Bundle version 1 supports project schema 1. Imports reject unknown fields/versio
 
 Templates support keyword search by name, description and purpose. Animations support keyword search and motion-category selection, with result counts and reset actions. Films remain looping creative references; filtering does not turn them into selectable project treatments. Agents use list_templates and list_animations with optional query/category, and discover available categories in the responses.
 
-Verification: npm test, npm run build, npx tsx tests/bundle-workflow.ts and npx tsx tests/library-search.ts. Bundle round-trip tests include embedded photo/logo, crop, timing, order and independent identities in a separate workspace.
+Verification: npm test, npm run build, npx tsx tools/carousel/tests/bundle-workflow.ts and npx tsx tools/carousel/tests/library-search.ts. Bundle round-trip tests include embedded photo/logo, crop, timing, order and independent identities in a separate workspace.
 
 ## Review and adjust a carousel
 

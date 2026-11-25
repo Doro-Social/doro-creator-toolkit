@@ -1,0 +1,2 @@
+import {it,expect} from 'vitest';import fs from 'node:fs/promises';import {tmpdir} from 'node:os';import path from 'node:path';import {lockWorkspace} from '../core/src/workspace-lock.ts';
+it('rejects a second server and permits reopening after release',async()=>{const root=await fs.mkdtemp(path.join(tmpdir(),'lock-'));try{const release=await lockWorkspace(root);await expect(lockWorkspace(root)).rejects.toThrow('already open');await release();const next=await lockWorkspace(root);await next();}finally{await fs.rm(root,{recursive:true,force:true});}});

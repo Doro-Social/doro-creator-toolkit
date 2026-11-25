@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import {sanitizeLogoSVG} from './svg.ts';
 import {z} from 'zod';
-import {AppError} from '../../core/src/schema.ts';
+import {AppError} from '../../common/src/errors.ts';
 export const uploadSchema=z.object({base64:z.string().max(14000000),alt:z.string().max(200).default(''),kind:z.enum(['photo','logo']).optional()}).strict();
 export async function normalizeImage(input:z.infer<typeof uploadSchema>){
  let bytes=Buffer.from(input.base64,'base64');if(!bytes.length||bytes.length>10*1024*1024)throw new AppError('INVALID_IMAGE','Choose a JPEG, PNG or WebP image up to 10 MB.');

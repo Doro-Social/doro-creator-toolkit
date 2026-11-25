@@ -6,8 +6,8 @@ dist/
 !.env.example
 
 # Generated HyperFrames capture caches and local runtime copies
-examples/rill-coffee/*/.hyperframes/
-examples/rill-coffee/*/gsap.min.js
+tools/carousel/examples/rill-coffee/*/.hyperframes/
+tools/carousel/examples/rill-coffee/*/gsap.min.js
 
 # Local generated project review evidence
 data/projects/

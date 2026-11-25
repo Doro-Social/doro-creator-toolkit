@@ -1,5 +1,5 @@
 import {DOMParser,XMLSerializer,type Element} from '@xmldom/xmldom';
-import {AppError} from '../../core/src/schema.ts';
+import {AppError} from '../../common/src/errors.ts';
 const namespace='http://www.w3.org/2000/svg';
 const elements=new Set(['svg','g','path','rect','circle','ellipse','line','polyline','polygon','defs','linearGradient','radialGradient','stop','title','desc']);
 const attributes=new Set(['xmlns','id','viewBox','width','height','x','y','x1','y1','x2','y2','cx','cy','r','rx','ry','d','points','transform','fill','fill-opacity','fill-rule','stroke','stroke-width','stroke-opacity','stroke-linecap','stroke-linejoin','stroke-miterlimit','stroke-dasharray','stroke-dashoffset','opacity','color','preserveAspectRatio','gradientUnits','gradientTransform','offset','stop-color','stop-opacity','fx','fy','fr','spreadMethod']);

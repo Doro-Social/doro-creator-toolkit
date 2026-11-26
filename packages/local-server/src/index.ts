@@ -4,6 +4,7 @@ import {createBundle,readBundle,bundleSummary} from '../../../tools/carousel/cor
 import {lockWorkspace} from '../../../tools/carousel/core/src/workspace-lock.ts';
 import {prepareHandoff,handoffSchema} from '../../../tools/carousel/exports/src/handoff.ts';
 import {Brands,kitInput} from '../../../tools/carousel/core/src/brands.ts';
+import {BrandAssets,assetUpload,assetKinds,assetId} from '../../media/src/brand-assets.ts';
 import {normalizeImage,uploadSchema} from '../../media/src/index.ts';
 import {Exports,exportSchema} from '../../../tools/carousel/exports/src/index.ts';
 import {canvasPresets} from '../../../tools/carousel/core/src/canvas.ts';
@@ -27,15 +28,47 @@ const app=express();const store=new Store(path.resolve(process.env.ACC_WORKSPACE
 const releaseWorkspace=await lockWorkspace(store.root);
 await store.initialize();
 const brands=new Brands(path.join(path.dirname(store.root),'brands'));
+const assets=new BrandAssets(path.join(path.dirname(store.root),'brand-assets'));
 const exportsService=new Exports(path.join(path.dirname(store.root),'exports'));await exportsService.initialize();
 app.use((req,res,next)=>{const host=req.headers.host||'';if(!/^(localhost|127\.0\.0\.1):\d+$/.test(host))return res.status(403).json({code:'INVALID_HOST',message:'Use the local application URL.'});if(req.headers.origin&&req.headers.origin!==`http://${host}`)return res.status(403).json({code:'INVALID_ORIGIN',message:'Open the app locally to continue.'});next();});
 app.use(express.json({limit:'48mb'}));
 app.get('/api/health',(_req,res)=>res.json({status:'ready',app:'doro-creator-toolkit',version:'0.1.0'}));
-app.get('/api/capabilities',(_req,res)=>res.json({version:'0.1.0',editableMotions,operations:['list','read','create','batch','duplicate','import','archive','restore','trash','history','validate','export','list_exports','get_export','cancel_export','download'],editRetries:{requestId:true,durable:true,returnsOriginalSnapshot:true},projectBundles:{version:1,maxBytes:50331648,embeddedMedia:true},doro:{available:false,localHandoff:true,message:'Local review packets are available. Sending requires a connected agent and approval.'},brandKits:{available:true,snapshot:true,typography:['editorial','modern']},templates,layouts,animations:motions,canvasPresets,media:{formats:['jpeg','png','webp'],logoFormats:['jpeg','png','webp','svg'],svg:{maxBytes:1048576,simpleOutlinedShapes:true,externalResources:false,normalizedTo:'webp'},maxUploadBytes:10485760,maxPixels:40000000,embedded:true},exports:['jpg','png','pdf','video','clips']}));
+app.get('/api/capabilities',(_req,res)=>res.json({version:'0.1.0',editableMotions,operations:['list','read','create','batch','duplicate','import','archive','restore','trash','history','validate','export','list_exports','get_export','cancel_export','download'],editRetries:{requestId:true,durable:true,returnsOriginalSnapshot:true},projectBundles:{version:1,maxBytes:50331648,embeddedMedia:true},doro:{available:false,localHandoff:true,message:'Local review packets are available. Sending requires a connected agent and approval.'},brandAssets:{kinds:assetKinds,localOriginals:true,brandScoped:true},brandKits:{available:true,snapshot:true,typography:['editorial','modern']},templates,layouts,animations:motions,canvasPresets,media:{formats:['jpeg','png','webp'],logoFormats:['jpeg','png','webp','svg'],svg:{maxBytes:1048576,simpleOutlinedShapes:true,externalResources:false,normalizedTo:'webp'},maxUploadBytes:10485760,maxPixels:40000000,embedded:true},exports:['jpg','png','pdf','video','clips']}));
 app.get('/api/brands',async(_req,res)=>res.json(await brands.list()));
 app.post('/api/brands',async(req,res)=>res.status(201).json(await brands.save(kitInput.parse(req.body))));
 app.post('/api/brands/:id',async(req,res)=>{const b=kitInput.extend({expectedRevision:z.number().int().nonnegative()}).strict().parse(req.body);res.json(await brands.save({label:b.label,brand:b.brand},req.params.id,b.expectedRevision));});
-app.post('/api/projects/:id/brand-kit',async(req,res)=>{const b=z.object({kitId:z.string().uuid(),expectedRevision:z.number().int().nonnegative()}).strict().parse(req.body);const kit=await brands.read(b.kitId);res.json(await store.batch(req.params.id,batchSchema.parse({expectedRevision:b.expectedRevision,commands:[{type:'brand',brand:kit.brand}]})));});
+app.post('/api/projects/:id/brand-kit',async(req,res)=>{const b=z.object({kitId:z.string().uuid(),expectedRevision:z.number().int().nonnegative()}).strict().parse(req.body);const kit=await brands.read(b.kitId);res.json(await store.batch(req.params.id,batchSchema.parse({expectedRevision:b.expectedRevision,commands:[{type:'brand',brand:{...kit.brand,kitId:kit.id}}]})));});
+app.get('/api/brands/:id/assets', async (req,res) => {
+  await brands.read(req.params.id);
+  res.json(await assets.list(req.params.id));
+});
+app.post('/api/brands/:id/assets', async (req,res) => {
+  await brands.read(req.params.id);
+  res.status(201).json(await assets.save(req.params.id, assetUpload.parse(req.body)));
+});
+app.get('/api/brands/:id/assets/:assetId', async (req,res) => {
+  res.json(await assets.resolve(req.params.id, req.params.assetId));
+});
+app.get('/api/brands/:id/assets/:assetId/preview', async (req,res) => {
+  const asset = await assets.resolve(req.params.id, req.params.assetId);
+  res.type('image/webp').send(await fs.readFile(asset.previewPath));
+});
+app.post('/api/projects/:id/brand-asset', async (req,res) => {
+  const input = z.object({
+    expectedRevision:z.number().int().nonnegative(), kitId:z.string().uuid(), assetId,
+    target:z.enum(['logo','photo']), slideId:z.string().uuid().optional(),
+  }).strict().parse(req.body);
+  const project = await store.read(req.params.id);
+  if (input.expectedRevision !== project.revision) throw new AppError('REVISION_CONFLICT','This draft changed. Reload it before applying an asset.');
+  if (input.kitId !== project.brand.kitId) throw new AppError('BRAND_MISMATCH','Apply this brand kit to the project first.');
+  const asset = await assets.resolve(input.kitId, input.assetId);
+  const bytes = await fs.readFile(asset.previewPath);
+  const image = {src:'data:image/webp;base64,'+bytes.toString('base64'), alt:asset.label, width:asset.width, height:asset.height};
+  const command = input.target === 'logo'
+    ? {type:'brand', brand:{...project.brand,logo:image}}
+    : {type:'editSlide', slideId:input.slideId, patch:{photo:{...image,fit:asset.kind==='photo'?'cover':'contain',x:50,y:50}}};
+  res.json(await store.batch(req.params.id, batchSchema.parse({expectedRevision:input.expectedRevision,commands:[command]})));
+});
 app.post('/api/media',async(req,res)=>res.json(await normalizeImage(uploadSchema.parse(req.body))));
 const searchSchema=z.object({query:z.string().max(200).optional(),category:z.string().max(100).optional()}).strict();
 function searchCatalog<T extends {id:string;name:string;category:string}>(items:readonly T[],raw:unknown){const {query='',category}=searchSchema.parse(raw);return items.filter(item=>(!category||item.category===category)&&JSON.stringify(item).toLowerCase().includes(query.trim().toLowerCase()));}
@@ -67,7 +100,7 @@ app.use('/api',(_req,res)=>res.status(404).json({code:'NOT_FOUND',message:'This 
 const server=createHttpServer(app);
 let vite:ViteDevServer|undefined;
 if(production){app.use(express.static(builtUI,{index:false}));app.get(/.*/, (req,res)=>{if(path.extname(req.path))return res.status(404).send('File not found.');res.sendFile(path.join(builtUI,'index.html'));});}
-else{const {createServer}=await import('vite');vite=await createServer({server:{middlewareMode:true,hmr:{server},watch:{ignored:[store.root.replaceAll('\\','/')+'/**',path.join(path.dirname(store.root),'exports').replaceAll('\\','/')+'/**',path.join(path.dirname(store.root),'brands').replaceAll('\\','/')+'/**']}},appType:'spa'});app.use(vite.middlewares);}
-app.use((err:unknown,_req:express.Request,res:express.Response,_next:express.NextFunction)=>{const status=err instanceof AppError?(err.code==='REVISION_CONFLICT'?409:err.code==='PROJECT_NOT_FOUND'?404:400):err instanceof z.ZodError?400:typeof err==='object'&&err!==null&&'status' in err&&[400,413].includes(Number(err.status))?Number(err.status):500;res.status(status).json({code:status===413?'FILE_TOO_LARGE':err instanceof AppError?err.code:err instanceof z.ZodError?'INVALID_INPUT':'INTERNAL_ERROR',message:status===413?'This request exceeds the 48 MB limit. Use a smaller project or image.':status===500?'Something went wrong. Your last saved project is preserved.':(err as Error).message,details:err instanceof AppError?err.details:err instanceof z.ZodError?err.issues:undefined});});
+else{const {createServer}=await import('vite');vite=await createServer({server:{middlewareMode:true,hmr:{server},watch:{ignored:[assets.root.replaceAll('\\','/')+'/**',store.root.replaceAll('\\','/')+'/**',path.join(path.dirname(store.root),'exports').replaceAll('\\','/')+'/**',path.join(path.dirname(store.root),'brands').replaceAll('\\','/')+'/**']}},appType:'spa'});app.use(vite.middlewares);}
+app.use((err:unknown,_req:express.Request,res:express.Response,_next:express.NextFunction)=>{const status=err instanceof AppError?(err.code==='REVISION_CONFLICT'?409:['ASSET_NOT_FOUND','KIT_NOT_FOUND','PROJECT_NOT_FOUND'].includes(err.code)?404:400):err instanceof z.ZodError?400:typeof err==='object'&&err!==null&&'status' in err&&[400,413].includes(Number(err.status))?Number(err.status):500;res.status(status).json({code:status===413?'FILE_TOO_LARGE':err instanceof AppError?err.code:err instanceof z.ZodError?'INVALID_INPUT':'INTERNAL_ERROR',message:status===413?'This request exceeds the 48 MB limit. Use a smaller project or image.':status===500?'Something went wrong. Your last saved project is preserved.':(err as Error).message,details:err instanceof AppError?err.details:err instanceof z.ZodError?err.issues:undefined});});
 server.listen(port,'127.0.0.1',()=>console.log(`Doro Creator Toolkit: http://127.0.0.1:${port}`));server.on('error',async e=>{await releaseWorkspace();console.error(`Could not start the app: ${e.message}. Choose another PORT if it is occupied.`);process.exit(1);});
 for(const signal of ['SIGINT','SIGTERM'] as const)process.once(signal,()=>{server.close();void (async()=>{await exportsService.shutdown();await vite?.close();await releaseWorkspace();process.exit(0);})();});

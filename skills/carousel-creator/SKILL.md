@@ -7,13 +7,17 @@ description: Install and operate Doro Creator Toolkit locally, create and revise
 
 The user supplies a repository and a topic. Use this checkout to create a useful local carousel; the browser is the user's review surface. Do not install a hosted AI backend or ask for a generation API key.
 
+## Creator experience
+
+The creator supplies a repository link and a content request, not a setup checklist. Handle installation, startup, supported local operations and routine troubleshooting yourself within the available permissions. Explain progress in plain language and return a browser preview to review. Ask only for missing content facts or an action that genuinely requires the user; identify the exact action and why. Do not hand back terminal commands as the default next step or make optional MCP registration a prerequisite. If the environment cannot run local software, explain that limitation without pretending setup succeeded. On return visits, locate the existing installation and preserve saved projects rather than creating another copy.
+
 ## Setup
 
 For a first install or terminal-only operation, follow [references/local-setup.md](references/local-setup.md). The skill ships with the checkout; reading it is sufficient to use it. It does not register itself in every agent or provide app-specific slash commands. MCP is optional for local creation.
 
 Read the repository README. With Node 22+, run npm ci, npm run doctor, and npm run dev from the checkout. Use the returned local URL. If the browser is missing, run npx playwright install chromium. An occupied port does not authorize killing another process: try the existing app's /api/capabilities or choose another PORT. Keep the server running in the session. macOS is tested; other systems need verification. A chat environment without local execution cannot install this on the user's laptop.
 
-Use the MCP configuration in README if already connected. Otherwise the command `npm run cli -- request GET /capabilities` exposes the same API. For POST bodies, write a JSON file and run `npm run cli -- request POST /projects request.json`. Never edit .workspace/project files directly. The CLI route omits the /api prefix. Set ACC_URL if using another port.
+Use the optional MCP configuration in [the technical guide](../../docs/technical-guide.md#optional-mcp-connection-and-cli-access) if already connected. Otherwise the command `npm run cli -- request GET /capabilities` exposes the same API. For POST bodies, write a JSON file and run `npm run cli -- request POST /projects request.json`. Never edit .workspace/project files directly. The CLI route omits the /api prefix. Set ACC_URL if using another port.
 
 ## Create and personalize
 
@@ -42,6 +46,14 @@ Size variants should duplicate_project then apply canvas, preserving the origina
 ## Doro boundary
 
 The app can prepare a local Doro review packet, but has no browser-owned Doro sign-in or publishing. A separately connected agent can send through Doro MCP only when requested and approved. Local creation and exports need no Doro account. Do not fabricate a remote receipt or imply a PDF can be sent through an unverified connector.
+
+## First post or returning brand
+
+Use the business and audience already in the request. Check saved kits first. If a brand is named and unambiguous, apply its kit and browse its saved assets. If several businesses could match, ask which one this post is for. With a new business, ask briefly for any missing audience or topic and, if artwork would help, “Have a logo or photos you want to use? Share the files, point me to a folder, or we can start without them.” Look only in the location they choose. Ask about an ambiguous logo variant when it matters. A missing asset never blocks a draft.
+
+Distinguish “use this in the post” from “save this for future posts.” For one-off files, use import_image. When the user wants reuse, save or select a named brand kit, apply it to the project, then use save_brand_asset with kitId, filePath, label and kind (logo, icon, photo or screenshot). Use list_brand_assets to find that brand’s images and apply_brand_asset with the latest project revision, kitId, assetId, target and slideId for a photo. Applying a logo changes this project; to make it the default for new posts, update the kit from the draft if requested. resolve_brand_asset returns the managed original local path for tools that need the full-resolution file. Keep other brands’ libraries separate and use the files the creator supplied.
+
+Without MCP, use the CLI request routes in the technical guide and `npm run cli -- save-brand-asset <kitId> <kind> "<label>" "/absolute/path/to/image"`. The file stays local in both workflows.
 
 ## User artwork
 

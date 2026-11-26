@@ -10,7 +10,7 @@ tools/carousel/         Existing carousel capability (details below)
 packages/agent-tools/    Shared stdio MCP entry point
 packages/cli/            Shared terminal entry point and doctor
 packages/local-server/   Local HTTP service and process lifecycle
-packages/media/          Image normalization and restricted SVG ingestion
+packages/media/          Shared brand asset storage, image normalization and restricted SVG ingestion
 packages/common/         Error type shared by media and carousel operations
 packages/studio-ui/      Existing studio shell, icons and global styles
 skills/carousel-creator/ Agent instructions for the carousel workflow
@@ -36,6 +36,8 @@ Tool code may depend on shared packages, but shared media/common/UI utilities mu
 ## Data and external actions
 
 Projects, original user content, exports, receipts and credentials are excluded from source control. `.workspace` and `.artifacts` are local only. Do not persist raw edits behind the running server; use its revision-checked operations. Local creation/export needs no Doro connection. A local handoff packet is not an upload or remote draft. Sending requires separately connected Doro MCP tools and approval of the exact destination and content.
+
+The shared media library owns brand-scoped image IDs, original files, normalized previews and metadata. Resolve an asset by kit ID and asset ID when another local tool needs its original. Carousels store a brand kit ID and embed the preview when an asset is applied, so saved drafts, undo and portable project bundles work independently of the library. Older projects can link a kit by applying it in the editor.
 
 ## Current limits
 

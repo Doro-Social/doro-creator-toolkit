@@ -1,3 +1,4 @@
+import {assetFields,assetId,localAssetBody} from '../../media/src/brand-assets.ts';
 import {handoffSchema} from '../../../tools/carousel/exports/src/handoff.ts';
 import {kitInput} from '../../../tools/carousel/core/src/brands.ts';
 import fs from 'node:fs/promises';
@@ -25,6 +26,14 @@ server.tool('import_image','Attach a local JPEG/PNG/WebP directly to a slide or 
 server.tool('list_brand_kits','List reusable local branding. Applying a kit copies its values; subsequent kit edits do not change projects.',{},()=>call('/api/brands'));
 server.tool('save_brand_kit','Create or update a reusable kit. For updates, supply kitId and its expectedRevision.',{...kitInput.shape,kitId:z.string().uuid().optional(),expectedRevision:z.number().int().nonnegative().optional()},({kitId,expectedRevision,...body})=>call('/api/brands'+(kitId?'/'+kitId:''),'POST',kitId?{...body,expectedRevision}:body));
 server.tool('apply_brand_kit','Apply a brand snapshot to a project. Undoable and revision checked. Does not change content or other projects.',{projectId:z.string().uuid(),kitId:z.string().uuid(),expectedRevision:z.number().int().nonnegative()},({projectId,...body})=>call('/api/projects/'+projectId+'/brand-kit','POST',body));
+const kitId = z.string().uuid();
+server.tool('list_brand_assets','List saved images for one brand by name, type and ID.',{kitId},({kitId})=>call('/api/brands/'+kitId+'/assets'));
+server.tool('save_brand_asset','Copy a chosen local image into the reusable brand library. Repeating the same file, label and type returns the existing asset.',{kitId,filePath:z.string(),...assetFields.shape},async({kitId,filePath,...fields})=>{
+  try {return await call('/api/brands/'+kitId+'/assets','POST',await localAssetBody(filePath,fields));}
+  catch(error){return {isError:true,content:[{type:'text' as const,text:(error as Error).message}]};}
+});
+server.tool('resolve_brand_asset','Get the managed local path to an original brand image and its preview for use by local tools.',{kitId,assetId},({kitId,assetId})=>call('/api/brands/'+kitId+'/assets/'+assetId));
+server.tool('apply_brand_asset','Use a saved image from the project’s applied kit as a slide photo or project logo.',{projectId:z.string().uuid(),kitId,assetId,target:z.enum(['photo','logo']),slideId:z.string().uuid().optional(),expectedRevision:z.number().int().nonnegative()},({projectId,...body})=>call('/api/projects/'+projectId+'/brand-asset','POST',body));
 server.tool('prepare_doro_handoff','Prepare a local image-carousel review packet from a current export and explicit destinations. Does not connect, upload or create remote drafts. Returns exact files and copy for account selection and approval.',{projectId:z.string().uuid(),...handoffSchema.shape},({projectId,...body})=>call('/api/projects/'+projectId+'/handoff','POST',body));
 server.tool('capabilities','Discover supported operations and templates.',{},()=>call('/api/capabilities'));
 server.tool('list_animations','Search catalog directions by keyword or exact category. Gallery films are inspiration, not editable presets.',{query:z.string().max(200).optional(),category:z.string().max(100).optional()},b=>call('/api/animations?'+new URLSearchParams(b as Record<string,string>)));

@@ -14,7 +14,7 @@ Doctor checks Node, local Bun/HyperFrames, FFmpeg/ffprobe, disk/storage and Chro
 
 Use the printed URL and keep the server process alive. If the default port 4310 is occupied, GET `/api/health` and confirm `app: doro-creator-toolkit` before using it. For a separate instance set both PORT and an absolute ACC_WORKSPACE ending in a project directory; exports and branding are stored beside that directory. Never start two servers against the same workspace. Set ACC_URL on subsequent CLI/MCP calls to match the chosen port.
 
-No global HyperFrames/Bun install, generation API key, Doro login or MCP registration is required for this workflow. The README supplies optional stdio MCP configuration. Do not overwrite the user's agent configuration to register the skill; repository instructions can be read directly. A chat-only environment cannot install software on the user's computer.
+No global HyperFrames/Bun install, generation API key, Doro login or MCP registration is required for this workflow. The [technical guide](../../../docs/technical-guide.md#optional-mcp-connection-and-cli-access) supplies optional stdio MCP configuration. Do not overwrite the user's agent configuration to register the skill; repository instructions can be read directly. A chat-only environment cannot install software on the user's computer.
 
 ## CLI when MCP is unavailable
 
